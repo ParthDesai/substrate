@@ -31,6 +31,7 @@
 //!     [`Config::FeeMultiplierUpdate`]
 //!   - How the fees are paid via [`Config::OnChargeTransaction`].
 
+#![feature(proc_macro_hygiene)]
 #![cfg_attr(not(feature = "std"), no_std)]
 
 use sp_std::prelude::*;

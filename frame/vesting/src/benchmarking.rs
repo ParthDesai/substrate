@@ -21,11 +21,85 @@
 
 use super::*;
 
-use frame_system::{RawOrigin, Module as System};
+use frame_support::{
+	assert_ok, assert_noop, impl_outer_origin, parameter_types, weights::Weight,
+};
+use sp_core::H256;
+use sp_runtime::{
+	Perbill,
+	testing::Header,
+	traits::{BlakeTwo256, IdentityLookup, Identity, BadOrigin},
+};
+use frame_system::RawOrigin;
+
+impl_outer_origin! {
+		pub enum Origin for Test where system = frame_system {}
+	}
+
+#[derive(Clone, Eq, PartialEq)]
+pub struct Test;
+parameter_types! {
+		pub const BlockHashCount: u64 = 250;
+		pub const MaximumBlockWeight: Weight = 1024;
+		pub const MaximumBlockLength: u32 = 2 * 1024;
+		pub const AvailableBlockRatio: Perbill = Perbill::one();
+	}
+impl frame_system::Config for Test {
+	type BaseCallFilter = ();
+	type Origin = Origin;
+	type Index = u64;
+	type BlockNumber = u64;
+	type Hash = H256;
+	type Call = ();
+	type Hashing = BlakeTwo256;
+	type AccountId = u64;
+	type Lookup = IdentityLookup<Self::AccountId>;
+	type Header = Header;
+	type Event = ();
+	type BlockHashCount = BlockHashCount;
+	type MaximumBlockWeight = MaximumBlockWeight;
+	type DbWeight = ();
+	type BlockExecutionWeight = ();
+	type ExtrinsicBaseWeight = ();
+	type MaximumExtrinsicWeight = MaximumBlockWeight;
+	type MaximumBlockLength = MaximumBlockLength;
+	type AvailableBlockRatio = AvailableBlockRatio;
+	type Version = ();
+	type PalletInfo = ();
+	type AccountData = pallet_balances::AccountData<u64>;
+	type OnNewAccount = ();
+	type OnKilledAccount = ();
+	type SystemWeightInfo = ();
+}
+parameter_types! {
+		pub const MaxLocks: u32 = 10;
+	}
+impl pallet_balances::Config for Test {
+	type Balance = u64;
+	type DustRemoval = ();
+	type Event = ();
+	type ExistentialDeposit = ExistentialDeposit;
+	type AccountStore = System;
+	type MaxLocks = MaxLocks;
+	type WeightInfo = ();
+}
+parameter_types! {
+		pub const MinVestedTransfer: u64 = 256 * 2;
+		pub static ExistentialDeposit: u64 = 0;
+	}
+impl Config for Test {
+	type Event = ();
+	type Currency = Balances;
+	type BlockNumberToBalance = Identity;
+	type MinVestedTransfer = MinVestedTransfer;
+	type WeightInfo = ();
+}
+type System = frame_system::Module<Test>;
+type Balances = pallet_balances::Module<Test>;
+type Vesting = Module<Test>;
+
 use frame_benchmarking::{benchmarks, account, whitelisted_caller};
 use sp_runtime::traits::Bounded;
-
-use crate::Module as Vesting;
 
 const SEED: u32 = 0;
 

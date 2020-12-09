@@ -15,6 +15,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#![feature(proc_macro_hygiene)]
+
 //! # System Module
 //!
 //! The System module provides low-level access to core types and cross-cutting utilities.

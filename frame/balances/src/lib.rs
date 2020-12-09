@@ -15,6 +15,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#![feature(proc_macro_hygiene)]
+
 //! # Balances Module
 //!
 //! The Balances module provides functionality for handling accounts and balances.
